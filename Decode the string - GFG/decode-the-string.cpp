@@ -11,47 +11,29 @@ class Solution{
 public:
     string decodedString(string s){
         // code here
-        stack<char>st;
-        int n=s.size();
-        for(int i=0;i<n;i++)
+        int pos=0;
+        return helper(pos,s);
+    }
+    string helper(int &pos,string &s)
+    {
+        int num=0;
+        string word="";
+        for(;pos<s.size();pos++)
         {
-            if(s[i]==']')
+            char cur=s[pos];
+            if(cur=='[')
             {
-                string temp="";
-                while(!st.empty() && st.top()!='[')
-                {
-                    temp=st.top()+temp;
-                    st.pop();
-                }
-                st.pop();
-                string num;
-                while(!st.empty() && isdigit(st.top()))
-                {
-                    num=st.top()+num;
-                    st.pop();
-                }
-                
-                int number=stoi(num);
-                string repeat;
-                for(int j=0;j<number;j++)
-                {
-                    repeat+=temp;
-                }
-                for(int k=0;k<repeat.size();k++)
-                    st.push(repeat[k]);
+                string text=helper(++pos,s);
+                for(;num>0;num--)word+=text;
             }
+            else if(cur>='0'&&cur<='9')
+                num=num*10+cur-'0';
+            else if(cur==']')
+                return word;
             else
-            {
-                st.push(s[i]);
-            }
+                word+=cur;
         }
-        string ans;
-        while(!st.empty())
-        {
-            ans=st.top()+ans;
-            st.pop();
-        }
-        return ans;
+        return word;
     }
 };
 
